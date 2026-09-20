@@ -8,6 +8,7 @@ class Settings(BaseSettings):
 
     app_version: str = "0.1.0"
     app_commit_sha: str = "local"
+    database_url: str = "postgresql://postgres:postgres@localhost:5432/ai_patent_radar"
 
 
 @lru_cache
