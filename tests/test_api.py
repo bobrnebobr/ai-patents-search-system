@@ -60,6 +60,7 @@ def test_health_returns_503_when_postgres_is_unavailable(monkeypatch) -> None:
     assert response.status_code == 503
     assert response.json()["status"] == "degraded"
 
+
 def test_healthz_includes_request_id() -> None:
     with TestClient(app=app) as client:
         response = client.get("/healthz")

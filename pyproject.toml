@@ -12,9 +12,49 @@ dependencies = [
 [dependency-groups]
 dev = [
     "httpx>=0.28.1",
+    "pre-commit>=4.6.2",
     "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.16.8",
 ]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+    "N",   # pep8-naming
+    "RUF", # ruff-specific
+    "BLE", # flake8-blind-except: запрещает except Exception без уважительной причины
+    "ANN", # flake8-annotations
+]
+ignore = [
+    "RUF001", # кириллические строки — ложные срабатывания
+    "RUF002", # кириллические docstring — ложные срабатывания
+    "RUF003", # кириллические комментарии — ложные срабатывания
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["ANN"]  # аннотации в тестах не несут контракта
+
+[tool.ruff.lint.isort]
+known-first-party = ["src"]
+
+[tool.ruff.format]
+quote-style = "double"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+addopts = [
+    "--cov=src",
+    "--cov-report=term-missing",
+    "--cov-report=xml",
+    "--cov-fail-under=85",
+]
