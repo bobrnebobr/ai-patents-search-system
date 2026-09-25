@@ -10,6 +10,7 @@
 - Litestar и Uvicorn
 - PostgreSQL и asyncpg
 - Pydantic Settings
+- Loguru
 - uv
 - pytest и pytest-cov
 - Ruff
@@ -112,7 +113,7 @@ docker compose up -d postgres
 
 ```bash
 export DATABASE_URL=postgresql://postgres:postgres@localhost:5433/ai_patent_search
-uv run uvicorn src.app:app --host 0.0.0.0 --port 8000 --reload
+uv run uvicorn src.app:app --host 0.0.0.0 --port 8000 --reload --no-access-log
 ```
 
 ## HTTP API
@@ -196,6 +197,17 @@ uv run pytest
 - успешная проверка PostgreSQL;
 - degraded-сценарий недоступной БД;
 - добавление `X-Request-ID`.
+
+Интеграционный тест выполняет полный путь `HTTP → Litestar DI → asyncpg → PostgreSQL`.
+Testcontainers автоматически запускает временный PostgreSQL и удаляет контейнер после
+теста, поэтому вручную настраивать тестовую БД не нужно. Требуется только запущенный Docker:
+
+```bash
+uv run pytest -m integration
+```
+
+В GitHub Actions Testcontainers использует Docker runner и выполняет интеграционный тест
+автоматически на каждом push.
 
 ## Линтер и форматирование
 
@@ -296,7 +308,8 @@ Workflow публикует образ в registry, но не разворачи
 ## Логирование
 
 Приложение пишет логи в стандартный вывод, что позволяет Docker собирать и ротировать
-их. Для каждого HTTP-запроса регистрируются:
+их. Access-log Uvicorn отключён, чтобы не дублировать запись из middleware. Для каждого
+HTTP-запроса регистрируются:
 
 - request ID;
 - HTTP-метод и путь;

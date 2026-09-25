@@ -5,6 +5,7 @@ requires-python = ">=3.12"
 dependencies = [
     "asyncpg>=0.31.0",
     "litestar>=2.24.0",
+    "loguru>=0.7.3",
     "pydantic-settings>=2.15.0",
     "uvicorn[standard]>=0.53.0",
 ]
@@ -16,6 +17,7 @@ dev = [
     "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
     "ruff>=0.16.8",
+    "testcontainers[postgres]>=4.15.0",
 ]
 
 [tool.ruff]
@@ -52,6 +54,9 @@ quote-style = "double"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+markers = [
+    "integration: tests that require external services",
+]
 addopts = [
     "--cov=src",
     "--cov-report=term-missing",
