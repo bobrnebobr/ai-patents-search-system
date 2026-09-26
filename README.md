@@ -32,6 +32,7 @@
 │   └── schemas.py              # Схемы ответов
 ├── tests/                      # Тесты API
 ├── Dockerfile
+├── Makefile                    # Короткие команды разработки
 ├── docker-compose.yml
 ├── pyproject.toml
 └── uv.lock
@@ -56,6 +57,15 @@ event loop во время сетевого ожидания.
 ```bash
 uv sync --frozen
 ```
+
+Основные команды собраны в `Makefile`. Посмотреть полный список:
+
+```bash
+make help
+```
+
+Например, `make run` запускает приложение, `make test` — тесты, `make lint` — проверки
+Ruff, а `make up` — приложение и PostgreSQL через Docker Compose.
 
 Настройки читаются из переменных окружения и необязательного файла `.env`. Доступные
 переменные перечислены в `.env.example`:
