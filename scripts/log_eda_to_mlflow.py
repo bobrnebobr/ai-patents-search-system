@@ -56,9 +56,7 @@ def main() -> None:
 
     basic_summary = read_json(args.reports_dir / "summary.json")
     advanced_summary = read_json(args.reports_dir / "advanced" / "advanced_summary.json")
-    duplicate_summary = read_json(
-        args.reports_dir / "advanced" / "duplicate_family_summary.json"
-    )
+    duplicate_summary = read_json(args.reports_dir / "advanced" / "duplicate_family_summary.json")
 
     mlflow.set_tracking_uri(args.tracking_uri)
     mlflow.set_experiment(args.experiment)

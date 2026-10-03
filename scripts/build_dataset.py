@@ -11,7 +11,6 @@ from pathlib import Path
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-
 PATENT_SCHEMA = pa.schema(
     [
         pa.field("publication_id", pa.string()),
@@ -180,12 +179,8 @@ def parse_document(
     docdb_id = document_id_by_type(publication_reference, "docdb")
     epodoc_id = document_id_by_type(publication_reference, "epodoc")
 
-    publication_authority = (
-        document.attrib.get("country") or child_text(docdb_id, "country")
-    )
-    document_number = (
-        document.attrib.get("doc-number") or child_text(docdb_id, "doc-number")
-    )
+    publication_authority = document.attrib.get("country") or child_text(docdb_id, "country")
+    document_number = document.attrib.get("doc-number") or child_text(docdb_id, "doc-number")
     document_kind = document.attrib.get("kind") or child_text(docdb_id, "kind")
     publication_date_raw = child_text(docdb_id, "date")
 

@@ -100,22 +100,18 @@ def main() -> None:
     for scope in scopes:
         group = duplicate_groups[duplicate_groups["duplicate_scope"] == scope]
         by_scope[scope] = {
-            "groups": int(len(group)),
+            "groups": len(group),
             "text_rows": int(group["text_rows"].sum()) if not group.empty else 0,
-            "publications": (
-                int(group["distinct_publications"].sum()) if not group.empty else 0
-            ),
+            "publications": (int(group["distinct_publications"].sum()) if not group.empty else 0),
         }
 
-    total_groups = int(len(duplicate_groups))
+    total_groups = len(duplicate_groups)
     cross_family_groups = by_scope["cross_family"]["groups"]
 
     summary = {
         "duplicate_groups": total_groups,
         "duplicate_text_rows": int(duplicate_groups["text_rows"].sum()),
-        "duplicate_publications": int(
-            duplicate_groups["distinct_publications"].sum()
-        ),
+        "duplicate_publications": int(duplicate_groups["distinct_publications"].sum()),
         "cross_family_group_share": (
             round(cross_family_groups / total_groups, 4) if total_groups else 0.0
         ),

@@ -64,9 +64,7 @@ def save_language_authority_heatmap(
         values="text_count",
     ).fillna(0)
 
-    matrix = matrix.loc[
-        matrix.sum(axis=1).sort_values(ascending=False).index
-    ]
+    matrix = matrix.loc[matrix.sum(axis=1).sort_values(ascending=False).index]
 
     figure, axis = plt.subplots(figsize=(9, 7))
     sns.heatmap(
@@ -291,8 +289,8 @@ def main() -> None:
         "top_authorities_in_language_heatmap": int(
             authority_language["publication_authority"].nunique()
         ),
-        "ipc_subclasses": int(len(ipc_long_tail)),
-        "duplicate_text_groups": int(len(duplicate_text_groups)),
+        "ipc_subclasses": len(ipc_long_tail),
+        "duplicate_text_groups": len(duplicate_text_groups),
         "duplicate_text_rows": int(duplicate_text_groups["text_rows"].sum()),
         "max_text_versions_for_one_patent": int(
             connection.execute(

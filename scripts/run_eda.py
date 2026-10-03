@@ -238,9 +238,7 @@ def main() -> None:
     )
 
     summary = {
-        "patents": int(
-            connection.execute("SELECT COUNT(*) FROM patents").fetchone()[0]
-        ),
+        "patents": int(connection.execute("SELECT COUNT(*) FROM patents").fetchone()[0]),
         "unique_families": int(
             connection.execute(
                 """
@@ -271,9 +269,7 @@ def main() -> None:
                 """
             ).fetchone()[0]
         ),
-        "text_versions": int(
-            connection.execute("SELECT COUNT(*) FROM patent_texts").fetchone()[0]
-        ),
+        "text_versions": int(connection.execute("SELECT COUNT(*) FROM patent_texts").fetchone()[0]),
         "ipcr_assignments": int(
             connection.execute(
                 """
