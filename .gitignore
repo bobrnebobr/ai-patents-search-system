@@ -156,6 +156,10 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+data/raw/
+data/processed/
+data/
+reports/
 
 # Spyder project settings
 .spyderproject
