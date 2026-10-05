@@ -126,6 +126,42 @@ export DATABASE_URL=postgresql://postgres:postgres@localhost:5433/ai_patent_sear
 uv run uvicorn src.app:app --host 0.0.0.0 --port 8000 --reload --no-access-log
 ```
 
+## Пробная выгрузка EPO OPS
+
+Указать OAuth-данные приложения EPO через переменные окружения:
+
+```bash
+export EPO_OPS_CONSUMER_KEY="..."
+export EPO_OPS_CONSUMER_SECRET="..."
+```
+
+Скачать десять свежих патентов из AI-класса `G06N`:
+
+```bash
+uv run python scripts/sample_epo_ops.py
+```
+
+Скрипт сохраняет исходный ответ в `data/samples/epo_ops/sample.xml`, а кратко
+разобранные записи — в `data/samples/epo_ops/sample.jsonl`. Запрос можно заменить
+любой строкой на языке OPS CQL:
+
+```bash
+uv run python scripts/sample_epo_ops.py \
+  --query 'pn=RU* and cpc=G06N and pd within "20200101 20261231"' \
+  --limit 20
+```
+
+Для большой возобновляемой выгрузки всех тематик только в исходном XML:
+
+```bash
+uv run python scripts/download_epo_ops_xml.py --target-gib 1
+```
+
+Файлы сохраняются по датам публикации в `data/raw/epo/`. Рядом создаётся
+`manifest.json` с диапазонами выдачи, размерами и SHA-256. При повторном запуске уже
+загруженные страницы пропускаются. OPS ограничивает один поисковый запрос первыми
+2 000 результатами, поэтому скрипт выводит предупреждение для дат с большей выдачей.
+
 ## HTTP API
 
 ### `GET /healthz`
