@@ -22,13 +22,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--data-dir",
         type=Path,
-        default=Path("data/processed/epo_v1"),
+        default=Path("data/processed/epo_english_v1"),
     )
     parser.add_argument(
         "--raw-source",
-        default="s3://datasets/epo_patents_1g.xml",
+        default=("s3://datasets/epo/english/v1/epo_english_3g_20261006.xml"),
     )
-    parser.add_argument("--dataset-version", default="epo_v1")
+    parser.add_argument(
+        "--processed-base-uri",
+        default="s3://datasets/epo/english/v1/processed",
+    )
+    parser.add_argument("--dataset-version", default="epo_english_v1")
     return parser.parse_args()
 
 
@@ -53,7 +57,7 @@ def main() -> None:
     with mlflow.start_run(run_name=f"{args.dataset_version}-dataset-registration") as run:
         mlflow.set_tags(
             {
-                "dataset.name": "epo_patents",
+                "dataset.name": "epo_english",
                 "dataset.version": args.dataset_version,
                 "dataset.raw_source": args.raw_source,
                 "pipeline.step": "dataset_tracking",
@@ -66,14 +70,16 @@ def main() -> None:
             if not parquet_path.exists():
                 raise FileNotFoundError(f"Не найден файл: {parquet_path}")
 
+            table_source = f"{args.processed_base_uri}/{table_name}.parquet"
             dataframe = pd.read_parquet(parquet_path)
-            file_sha256 = sha256_file(parquet_path)
-            mlflow_digest = file_sha256[:32]
+
+            full_sha256 = sha256_file(parquet_path)
+            mlflow_digest = full_sha256[:32]
 
             dataset = mlflow.data.from_pandas(
                 dataframe,
-                name=f"epo_patents_{table_name}_{args.dataset_version}",
-                source=args.raw_source,
+                name=f"epo_english_{table_name}_{args.dataset_version}",
+                source=table_source,
                 digest=mlflow_digest,
             )
 
@@ -83,8 +89,8 @@ def main() -> None:
                 tags={
                     "table": table_name,
                     "dataset_version": args.dataset_version,
+                    "raw_xml_source": args.raw_source,
                     "derived_by": "scripts/build_dataset.py",
-                    "processed_file": str(parquet_path).replace("\\", "/"),
                 },
             )
 
@@ -99,17 +105,17 @@ def main() -> None:
             tracked_tables.append(
                 {
                     "table": table_name,
-                    "path": str(parquet_path).replace("\\", "/"),
+                    "source": table_source,
                     "rows": len(dataframe),
                     "columns": len(dataframe.columns),
                     "mlflow_digest": mlflow_digest,
-                    "sha256": file_sha256,
+                    "sha256": full_sha256,
                 }
             )
 
         mlflow.log_dict(
             {
-                "dataset_name": "epo_patents",
+                "dataset_name": "epo_english",
                 "dataset_version": args.dataset_version,
                 "raw_source": args.raw_source,
                 "transformation": "scripts/build_dataset.py",
@@ -119,7 +125,6 @@ def main() -> None:
         )
 
         print(f"Run ID: {run.info.run_id}")
-        print("Dataset Tracking успешно завершён.")
         print(json.dumps(tracked_tables, ensure_ascii=False, indent=2))
 
 
