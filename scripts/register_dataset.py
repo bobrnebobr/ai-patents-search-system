@@ -8,7 +8,6 @@ from pathlib import Path
 import mlflow
 import pandas as pd
 
-
 TABLES = (
     "patents",
     "patent_texts",

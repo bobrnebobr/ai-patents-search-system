@@ -12,7 +12,6 @@ from typing import Any
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-
 PATENTS_SCHEMA = pa.schema(
     [
         pa.field("publication_id", pa.string()),
