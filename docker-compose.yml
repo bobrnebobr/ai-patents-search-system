@@ -73,6 +73,14 @@ services:
       LOG_LEVEL: INFO
       APP_VERSION: "0.1.0"
       APP_COMMIT_SHA: "local"
+      MLSERVER_URL: "http://ml:8080"
+      ENCODER_MODEL_NAME: "${ENCODER_MODEL_NAME:-patent-bi-encoder}"
+      MLSERVER_TIMEOUT: "${MLSERVER_TIMEOUT:-60}"
+      QDRANT_URL: "${QDRANT_URL:-http://localhost}"
+      QDRANT_PORT: "${QDRANT_PORT:-443}"
+      QDRANT_API_KEY: "${QDRANT_API_KEY:-}"
+      QDRANT_COLLECTION: "${QDRANT_COLLECTION:-}"
+      QDRANT_TIMEOUT: "${QDRANT_TIMEOUT:-300}"
     ports:
       - "8000:8000"
     depends_on:

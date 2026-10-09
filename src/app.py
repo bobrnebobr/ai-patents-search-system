@@ -3,14 +3,16 @@ from typing import Any
 from uuid import uuid4
 
 from litestar import Litestar
+from litestar.datastructures import State
 from litestar.middleware import DefineMiddleware
 from litestar.types import ASGIApp, Receive, Scope, Send
 from loguru import logger
 
 from src.api.health import health, healthz
+from src.api.ml import MLController
 from src.api.version import version
 from src.config import Settings
-from src.dependencies import create_dependencies
+from src.dependencies import create_dependencies, ml_clients_lifespan
 from src.logging_config import setup_logging
 
 
@@ -62,10 +64,12 @@ def create_app(
         setup_logging(app_settings.log_level)
 
     return Litestar(
-        route_handlers=[healthz, health, version],
+        route_handlers=[healthz, health, version, MLController],
         dependencies=dependencies,
         middleware=[DefineMiddleware(request_logging_middleware)],
         on_startup=[configure_app_logging],
+        state=State({"settings": app_settings}),
+        lifespan=[ml_clients_lifespan],
     )
 
 
