@@ -1,0 +1,8 @@
+{
+  "debug": false,
+  "host": "0.0.0.0",
+  "http_port": 8080,
+  "parallel_workers": 0,
+  "load_models_at_startup": true,
+  "model_repository_root": "/opt/ml/models"
+}

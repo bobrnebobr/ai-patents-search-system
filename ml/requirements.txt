@@ -1,0 +1,8 @@
+mlserver==1.7.1
+mlserver-mlflow==1.7.1
+mlflow==3.16.1
+sentence-transformers==6.1.0
+transformers==5.19.0
+torch==2.14.1
+numpy==2.5.3
+pandas==3.0.6
