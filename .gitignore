@@ -224,3 +224,4 @@ __marimo__/
 .streamlit/secrets.toml
 .idea/
 .env
+.DS_STORE

@@ -1,4 +1,32 @@
 services:
+  ml:
+    build:
+      context: ./ml
+    container_name: ai-patent-search-ml
+    profiles: ["ml"]
+    environment:
+      MLFLOW_TRACKING_URI: "${MLFLOW_TRACKING_URI:-}"
+      MLFLOW_TRACKING_USERNAME: "${MLFLOW_TRACKING_USERNAME:-}"
+      MLFLOW_TRACKING_PASSWORD: "${MLFLOW_TRACKING_PASSWORD:-}"
+      MLFLOW_ENABLE_PROXY_MULTIPART_DOWNLOAD: "false"
+      MLFLOW_HTTP_REQUEST_TIMEOUT: "1800"
+    ports:
+      - "127.0.0.1:8080:8080"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/v2/models/patent-bi-encoder/ready', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10m
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - ai-patent-search-network
+    restart: unless-stopped
+
   postgres:
     image: postgres:16-alpine
     container_name: ai-patent-search-postgres

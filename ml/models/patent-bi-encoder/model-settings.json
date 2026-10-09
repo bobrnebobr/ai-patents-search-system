@@ -1,0 +1,7 @@
+{
+  "name": "patent-bi-encoder",
+  "implementation": "mlserver_mlflow.MLflowRuntime",
+  "parameters": {
+    "uri": "models:/patent-bi-encoder@champion"
+  }
+}
