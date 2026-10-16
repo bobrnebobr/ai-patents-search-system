@@ -1,15 +1,18 @@
+import json
 import os
 from pathlib import Path
+
+import mlflow
+import numpy as np
+import pandas as pd
+import torch
+from mlflow import MlflowClient
+from mlflow.models import infer_signature
 
 os.environ["MLFLOW_ENABLE_PROXY_MULTIPART_UPLOAD"] = "false"
 os.environ["MLFLOW_ENABLE_PROXY_MULTIPART_DOWNLOAD"] = "false"
 os.environ["MLFLOW_HTTP_REQUEST_TIMEOUT"] = "1800"
 
-import mlflow
-import numpy as np
-import torch
-from mlflow import MlflowClient
-from mlflow.models import infer_signature
 
 TRACKING_URI = "URI"
 MODEL_NAME = "patent-classifier"
@@ -32,7 +35,7 @@ rng = np.random.default_rng(0)
 dim = arch["dim"]
 
 
-def unit(n):
+def unit(n: int) -> np.ndarray:
     a = rng.normal(size=(n, dim)).astype("float32")
     return a / np.linalg.norm(a, axis=1, keepdims=True)
 
@@ -55,7 +58,6 @@ with torch.no_grad():
     cos = torch.nn.functional.cosine_similarity(u, v, dim=-1).unsqueeze(-1)
     ref = torch.softmax(net(torch.cat([(u - v).abs(), u * v, cos], -1)), -1).numpy()
 
-import pandas as pd
 
 example_output = pd.DataFrame(
     {
@@ -70,7 +72,6 @@ print(signature)
 
 # 3. Логирование и регистрация
 with mlflow.start_run(run_name="patent-classifier-head"):
-    import json
 
     meta = json.load(open(meta_path))
     mlflow.log_param("threshold_relevant", meta["threshold_relevant"])
