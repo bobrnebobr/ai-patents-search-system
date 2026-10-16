@@ -9,7 +9,7 @@ COPY requirements.txt .
 RUN pip install --extra-index-url https://download.pytorch.org/whl/cpu -r requirements.txt \
     && pip check
 
-COPY settings.json .
+COPY settings.json runtime.py ./
 COPY models ./models
 
 EXPOSE 8080

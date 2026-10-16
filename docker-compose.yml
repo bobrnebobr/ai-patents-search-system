@@ -13,7 +13,7 @@ services:
     ports:
       - "127.0.0.1:8080:8080"
     healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/v2/models/patent-bi-encoder/ready', timeout=5)"]
+      test: ["CMD", "python", "-c", "import urllib.request; [urllib.request.urlopen(f'http://127.0.0.1:8080/v2/models/{name}/ready', timeout=5) for name in ('patent-bi-encoder', 'patent-classifier')]"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -75,6 +75,8 @@ services:
       APP_COMMIT_SHA: "local"
       MLSERVER_URL: "http://ml:8080"
       ENCODER_MODEL_NAME: "${ENCODER_MODEL_NAME:-patent-bi-encoder}"
+      CLASSIFIER_MODEL_NAME: "${CLASSIFIER_MODEL_NAME:-patent-classifier}"
+      ENCODER_BATCH_SIZE: "${ENCODER_BATCH_SIZE:-8}"
       MLSERVER_TIMEOUT: "${MLSERVER_TIMEOUT:-60}"
       QDRANT_URL: "${QDRANT_URL:-http://localhost}"
       QDRANT_PORT: "${QDRANT_PORT:-443}"

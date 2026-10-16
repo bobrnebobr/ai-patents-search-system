@@ -1,6 +1,6 @@
 {
   "name": "patent-classifier",
-  "implementation": "mlserver_mlflow.MLflowRuntime",
+  "implementation": "runtime.PandasMLflowRuntime",
   "parameters": {
     "uri": "models:/patent-classifier@champion"
   }

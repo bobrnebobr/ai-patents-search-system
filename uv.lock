@@ -60,6 +60,9 @@ dev = [
     { name = "seaborn" },
     { name = "testcontainers", extra = ["qdrant"] },
 ]
+evaluation = [
+    { name = "laya" },
+]
 
 [package.metadata]
 requires-dist = [
@@ -105,6 +108,7 @@ dev = [
     { name = "seaborn", specifier = ">=0.13.2" },
     { name = "testcontainers", extras = ["postgres", "qdrant"], specifier = ">=4.15.0" },
 ]
+evaluation = [{ name = "laya", specifier = "==0.4.8" }]
 
 [[package]]
 name = "aiohappyeyeballs"
@@ -2294,6 +2298,22 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/da/34/28fff3ab31ccff1fd4f6c7c7b0ceb2b6968d8ea4950663eadcb5720591a0/lark-1.3.1.tar.gz", hash = "sha256:b426a7a6d6d53189d318f2b6236ab5d6429eaf09259f1ca33eb716eed10d2905", size = 382732, upload-time = "2025-10-27T18:25:56.653Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/82/3d/14ce75ef66813643812f3093ab17e46d3a206942ce7376d31ec2d36229e7/lark-1.3.1-py3-none-any.whl", hash = "sha256:c629b661023a014c37da873b4ff58a817398d12635d3bbb2c5a03be7fe5d1e12", size = 113151, upload-time = "2025-10-27T18:25:54.882Z" },
+]
+
+[[package]]
+name = "laya"
+version = "0.4.8"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "huggingface-hub" },
+    { name = "numpy" },
+    { name = "safetensors" },
+    { name = "torch" },
+    { name = "transformers" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/4e/2d/a0d23f625a04f8962aa44dfb0a6748243233504510b87f84796cb9b8c7e2/laya-0.4.8.tar.gz", hash = "sha256:979d240d4681a1bf06dda347b55fdb2875bfd2f733779305feb425130ddcac84", size = 1213210, upload-time = "2026-10-15T10:52:26.897Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b8/cc/6f7d1ec516a450c42b2ad4c164e9cdbacac509bc808a187ec62e99be81ca/laya-0.4.8-py3-none-any.whl", hash = "sha256:05064d8b949803af8cb173561ed0b24d6be5b62cb86d8d319321577c630d0288", size = 405303, upload-time = "2026-10-15T10:52:24.584Z" },
 ]
 
 [[package]]

@@ -8,8 +8,9 @@ from qdrant_client import models
 from testcontainers.community.qdrant import QdrantContainer
 
 from src.clients.errors import UpstreamError
-from src.clients.mlserver import MLServerClient
+from src.clients.mlserver import MLServerClient, PatentClassifierClient
 from src.clients.qdrant import PatentSearchClient
+from src.schemas import PatentClassification
 from src.services.ml import PatentSearchService
 
 pytestmark = pytest.mark.integration
@@ -186,16 +187,26 @@ def test_search_service_with_real_qdrant(
     seed_patents(qdrant, collection)
     encoder = AsyncMock(spec=MLServerClient)
     encoder.encode.return_value = vector(1.0)
+    encoder.encode_batch.return_value = [vector(1.0), vector(0.8, 0.6)]
+    classifier = AsyncMock(spec=PatentClassifierClient)
+    classifier.classify.return_value = [
+        PatentClassification(label="relevant", score=0.9),
+        PatentClassification(label="not_relevant", score=0.1),
+    ]
 
     async def run() -> None:
         sdk = qdrant.get_async_client(check_compatibility=False, timeout=10)
         try:
-            service = PatentSearchService(encoder, PatentSearchClient(sdk, collection, timeout=5))
+            service = PatentSearchService(
+                encoder, PatentSearchClient(sdk, collection, timeout=5), classifier
+            )
             response = await service.search("Battery recycling", 2)
         finally:
             await sdk.close()
         assert len(response.patents) == 2
         assert response.patents[0].publication_id == "EP-BATTERY"
+        assert response.patents[0].relevance_label == "relevant"
+        assert response.patents[1].relevance_label == "not_relevant"
         encoder.encode.assert_awaited_once_with("Battery recycling")
 
     asyncio.run(run())

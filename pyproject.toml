@@ -45,6 +45,9 @@ dev = [
     "seaborn>=0.13.2",
     "testcontainers[postgres,qdrant]>=4.15.0",
 ]
+evaluation = [
+    "laya==0.4.8",
+]
 
 [tool.ruff]
 target-version = "py312"
