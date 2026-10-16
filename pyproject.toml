@@ -7,6 +7,7 @@ dependencies = [
     "boto3>=1.43.107",
     "boto3-stubs~=1.43.107",
     "ipykernel>=7.4.0",
+    "httpx>=0.28.1",
     "litestar>=2.24.0",
     "loguru>=0.7.3",
     "mlflow>=3.16.1",
@@ -21,6 +22,15 @@ dependencies = [
 ]
 
 [dependency-groups]
+backend = [
+    "asyncpg>=0.31.0",
+    "httpx>=0.28.1",
+    "litestar>=2.24.0",
+    "loguru>=0.7.3",
+    "pydantic-settings>=2.15.0",
+    "qdrant-client>=1.19.1",
+    "uvicorn[standard]>=0.53.0",
+]
 dev = [
     "duckdb>=1.5.6",
     "httpx>=0.28.1",
@@ -33,7 +43,7 @@ dev = [
     "pytest-cov>=7.1.0",
     "ruff>=0.16.8",
     "seaborn>=0.13.2",
-    "testcontainers[postgres]>=4.15.0",
+    "testcontainers[postgres,qdrant]>=4.15.0",
 ]
 
 [tool.ruff]

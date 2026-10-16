@@ -13,7 +13,7 @@ ENV APP_VERSION=${APP_VERSION} \
     PYTHONDONTWRITEBYTECODE=1
 
 COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-dev
+RUN uv sync --frozen --only-group backend
 
 COPY src/ ./src/
 
