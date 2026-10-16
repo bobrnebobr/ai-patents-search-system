@@ -7,7 +7,7 @@ from litestar.datastructures import State
 from litestar.di import NamedDependency, Provide
 from qdrant_client import AsyncQdrantClient
 
-from src.clients.mlserver import MLServerClient
+from src.clients.mlserver import MLServerClient, PatentClassifierClient
 from src.clients.qdrant import PatentSearchClient
 from src.config import Settings
 from src.services.ml import PatentSearchService
@@ -30,7 +30,10 @@ async def ml_clients_lifespan(app: Litestar) -> AsyncIterator[None]:
             check_compatibility=False,
         )
         stack.push_async_callback(qdrant.close)
-        app.state.encoder_client = MLServerClient(http, settings.encoder_model_name)
+        app.state.encoder_client = MLServerClient(
+            http, settings.encoder_model_name, batch_size=settings.encoder_batch_size
+        )
+        app.state.classifier_client = PatentClassifierClient(http, settings.classifier_model_name)
         app.state.patent_search_client = PatentSearchClient(
             qdrant, settings.qdrant_collection.get_secret_value(), settings.qdrant_timeout
         )
@@ -45,11 +48,16 @@ def provide_patent_search_client(state: State) -> PatentSearchClient:
     return state.patent_search_client
 
 
+def provide_classifier_client(state: State) -> PatentClassifierClient:
+    return state.classifier_client
+
+
 def provide_patent_search_service(
     encoder_client: NamedDependency[MLServerClient],
     patent_search_client: NamedDependency[PatentSearchClient],
+    classifier_client: NamedDependency[PatentClassifierClient],
 ) -> PatentSearchService:
-    return PatentSearchService(encoder_client, patent_search_client)
+    return PatentSearchService(encoder_client, patent_search_client, classifier_client)
 
 
 def create_settings_provider(settings: Settings) -> Callable[[], Settings]:
@@ -63,6 +71,7 @@ def create_dependencies(settings: Settings) -> DependencyMap:
     return {
         "encoder_client": Provide(provide_encoder_client, sync_to_thread=False),
         "patent_search_client": Provide(provide_patent_search_client, sync_to_thread=False),
+        "classifier_client": Provide(provide_classifier_client, sync_to_thread=False),
         "patent_search_service": Provide(provide_patent_search_service, sync_to_thread=False),
         "settings": Provide(
             create_settings_provider(settings),

@@ -12,6 +12,8 @@ class Settings(BaseSettings):
 
     mlserver_url: str = "http://localhost:8080"
     encoder_model_name: str = "patent-bi-encoder"
+    classifier_model_name: str = "patent-classifier"
+    encoder_batch_size: int = Field(default=8, ge=1)
     mlserver_timeout: float = Field(default=60.0, gt=0)
 
     qdrant_url: str = "http://localhost"

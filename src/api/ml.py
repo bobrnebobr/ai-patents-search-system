@@ -18,7 +18,7 @@ class MLController(Controller):
         "/patent-search/process",
         status_code=HTTP_200_OK,
         summary="Search patents by text",
-        description="Encode a text query with MLServer and retrieve patents from Qdrant.",
+        description="Retrieve patents from Qdrant and classify their relevance with MLServer.",
     )
     async def search_patents(
         self,
