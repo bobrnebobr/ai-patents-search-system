@@ -72,7 +72,6 @@ print(signature)
 
 # 3. Логирование и регистрация
 with mlflow.start_run(run_name="patent-classifier-head"):
-
     meta = json.load(open(meta_path))
     mlflow.log_param("threshold_relevant", meta["threshold_relevant"])
     mlflow.log_param("features", meta.get("features"))
